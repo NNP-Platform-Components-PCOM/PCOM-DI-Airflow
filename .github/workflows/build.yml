@@ -1,0 +1,25 @@
+name: build-and-publish
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+  security-events: write
+
+jobs:
+  pipeline:
+    uses: NNP-Platform-Components-PCOM/PCOM-CICD/.github/workflows/container-pipeline.yml@main
+    secrets: inherit
+    with:
+      image-name: pcom-di-airflow
+      image-version: "2.11.0"
+      platforms: linux/amd64
