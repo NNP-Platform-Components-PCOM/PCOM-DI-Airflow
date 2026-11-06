@@ -65,4 +65,6 @@ RUN pip install --no-cache-dir \
     apache-airflow-providers-apache-spark \
     keras \
     tensorflow-cpu \
-    pyspark==3.5.3
+    pyspark==3.5.3 \
+    PyMySQL==1.1.2 \
+    minio==7.2.10
