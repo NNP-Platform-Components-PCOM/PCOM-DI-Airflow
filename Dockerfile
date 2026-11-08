@@ -26,9 +26,10 @@ LABEL org.opencontainers.image.title="pcom-di-airflow" \
 
 USER root
 
-# Java 17 (Bookworm-compatible) and wget - required for Spark install.
+# Java 17, wget, and Python 3.11 (matches Spark cluster's Python version for client mode).
 RUN apt-get update && \
-    apt-get install -y openjdk-17-jdk wget && \
+    apt-get install -y openjdk-17-jdk wget python3.11 python3.11-venv python3.11-dev && \
+    python3.11 -m ensurepip --upgrade && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -47,6 +48,16 @@ RUN wget -q https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-$
     chown -R airflow:root ${SPARK_HOME}
 
 ENV PATH=$SPARK_HOME/bin:$PATH
+
+# Install Spark 3.4.1 alongside 3.5.3 to match the standalone cluster version.
+# Use SPARK_HOME=/opt/spark-3.4.1 and PYSPARK_PYTHON=python3.11 when submitting to that cluster.
+RUN wget -q https://archive.apache.org/dist/spark/spark-3.4.1/spark-3.4.1-bin-hadoop3.tgz && \
+    tar -xzf spark-3.4.1-bin-hadoop3.tgz -C /opt && \
+    mv /opt/spark-3.4.1-bin-hadoop3 /opt/spark-3.4.1 && \
+    rm spark-3.4.1-bin-hadoop3.tgz && \
+    chown -R airflow:root /opt/spark-3.4.1
+
+RUN python3.11 -m pip install --no-cache-dir pyspark==3.4.1
 
 USER airflow
 
