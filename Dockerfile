@@ -28,8 +28,7 @@ USER root
 
 # Java 17, wget, and Python 3.11 (matches Spark cluster's Python version for client mode).
 RUN apt-get update && \
-    apt-get install -y openjdk-17-jdk wget python3.11 python3.11-venv python3.11-dev && \
-    python3.11 -m ensurepip --upgrade && \
+    apt-get install -y openjdk-17-jdk wget python3.11 python3.11-venv python3.11-dev python3-pip && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
