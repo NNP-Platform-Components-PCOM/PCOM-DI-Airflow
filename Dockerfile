@@ -56,7 +56,9 @@ RUN wget -q https://archive.apache.org/dist/spark/spark-3.4.1/spark-3.4.1-bin-ha
     rm spark-3.4.1-bin-hadoop3.tgz && \
     chown -R airflow:root /opt/spark-3.4.1
 
-RUN python3.11 -m pip install --no-cache-dir pyspark==3.4.1
+RUN python3.11 -m venv /opt/venv-py311 && \
+    /opt/venv-py311/bin/pip install --no-cache-dir pyspark==3.4.1 && \
+    chown -R airflow:root /opt/venv-py311
 
 USER airflow
 
